@@ -143,7 +143,10 @@ from seahub.api2.endpoints.admin.notifications import AdminNotificationsView
 from seahub.api2.endpoints.admin.work_weixin import AdminWorkWeixinDepartments, \
     AdminWorkWeixinDepartmentMembers, AdminWorkWeixinUsersBatch, AdminWorkWeixinDepartmentsImport
 
+from seahub.pingan.pacas import pacas_login
+
 urlpatterns = [
+    url(r'^pingan/pacas-login/', pacas_login, name='pingan_pacas_login'),
     url(r'^accounts/', include('seahub.base.registration_urls')),
 
     url(r'^sso/$', sso, name='sso'),
