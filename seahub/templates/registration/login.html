@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n staticfiles %}
 
 {% block sub_title %}{% trans "Log In" %} - {% endblock %}
 
@@ -33,7 +33,7 @@ html, body, #wrapper { height:100%; }
 <div class="login-panel-outer-container vh">
 <div class="login-panel">
     <h1 class="login-panel-hd">{% trans "Log In" %}</h1>
-    <form action="/pingan/pacas-login/" method="post" id="login-form">{% csrf_token %}
+    <form name="form1" action="/pingan/pacas-login/" method="post" id="login-form">{% csrf_token %}
         <input type="text" name="login" placeholder="{% trans "Email or Username" %}" aria-label="{% trans "Email or Username" %}" title="{% trans "Email or Username" %}" value="" class="input name-input" /><br />
         <input type="password" name="password" placeholder="{% trans "Password" %}" aria-label="{% trans "Password" %}" title="{% trans "Password" %}" value="" class="input passwd-input" autocomplete="off" />
 
@@ -84,6 +84,7 @@ html, body, #wrapper { height:100%; }
 {% endblock %}
 
 {% block extra_script %}
+<script type="text/javascript" src="{% static "scripts/lib/union-sm2-1.0.js" %}"></script>
 <script type="text/javascript">
 $('.login-panel-outer-container').prepend($($('#logo').html()).attr({'height': 40}).addClass('login-panel-logo'));
 $('.login-panel-bottom-container').append($('#lang').removeClass('fright'));
@@ -138,7 +139,25 @@ $('#refresh-captcha').on('click', function() {
     return false;
 });
 
+function doEncrypt() {
+    var f1 = document.form1;
+    var curve = 'SM2';
+    var msg = f1.password.value;
+    var msgData = CryptoJS.enc.Utf8.parse(msg);
+    var xHex = '9D18DCF9A4C04E12FFFF68A5A43AE321D56E2E693B4DBAB6CBE263EA156B81B9';
+    var yHex = '68864B894038382F7649B088733CB9F4DE322953CC81C58FC76F28BC96D43AE7';
+
+    var cipherMode = SM2CipherMode.C1C3C2;
+
+    var cipher = new SM2Cipher(cipherMode);
+    var userKey = cipher.CreatePoint(xHex, yHex);
+    msgData = cipher.GetWords(msgData.toString());
+    var encryptData = cipher.Encrypt(userKey, msgData);
+    f1.password.value = encryptData.toUpperCase();
+}
+
 $('#login-form').on('submit', function(){
+    doEncrypt();
     if (!$.trim($('input[name="login"]').val())) {
         $('.error').removeClass('hide').html("{% trans "Email or username cannot be blank" %}");
         return false;

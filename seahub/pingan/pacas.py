@@ -54,7 +54,7 @@ def get_access_token():
 def get_request_id(oauth_access_token):
 
     parameter_data = {'appId': PINGAN_PACAS_APP_ID}
-    url = PINGAN_PACAS_GET_REQUEST_ID_URL + '?' + urllib.parse.urlencode(parameter_data)
+    url = PINGAN_PACAS_GET_REQUEST_ID_URL + '?' + urllib.urlencode(parameter_data)
 
     signature = hashlib.md5(PINGAN_PACAS_APP_ID + PINGAN_PACAS_V_USERNAME).hexdigest()
     payload = {
@@ -79,7 +79,7 @@ def get_request_id(oauth_access_token):
 def authenticate(username, password, oauth_access_token, request_id, source_ip):
 
     parameter_data = {'appId': PINGAN_PACAS_APP_ID}
-    url = PINGAN_PACAS_AUTHENTICATE_URL + '?' + urllib.parse.urlencode(parameter_data)
+    url = PINGAN_PACAS_AUTHENTICATE_URL + '?' + urllib.urlencode(parameter_data)
 
     signature = hashlib.md5(request_id + PINGAN_PACAS_APP_ID + username +
             password + source_ip).hexdigest()
@@ -109,7 +109,7 @@ def authenticate_by_sso(username, password, oauth_access_token, request_id,
         source_ip, sso_type, sso_cookie):
 
     parameter_data = {'appId': PINGAN_PACAS_APP_ID}
-    url = PINGAN_PACAS_AUTHENTICATE_BY_SSO_URL + '?' + urllib.parse.urlencode(parameter_data)
+    url = PINGAN_PACAS_AUTHENTICATE_BY_SSO_URL + '?' + urllib.urlencode(parameter_data)
 
     signature = hashlib.md5(request_id + PINGAN_PACAS_APP_ID + sso_type +
             sso_cookie + source_ip).hexdigest()
